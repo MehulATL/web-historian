@@ -18,6 +18,7 @@ describe("Node Server Request Listener Function", function() {
   it("Should answer GET requests for /", function(done) {
     var req = new stubs.Request("/", "GET");
     handler.handleRequest(req, res);
+    waits(1000);
     async(function(){
       expect(res._responseCode).toEqual(200);
       expect(res._data).toMatch(/<input/); // the resulting html should have an input tag
@@ -30,6 +31,7 @@ describe("Node Server Request Listener Function", function() {
     var fixtureName = "www.google.com";
     var req = new stubs.Request("/" + fixtureName, "GET");
     handler.handleRequest(req, res);
+    waits(1000);
     async(function(){
       expect(res._responseCode).toEqual(200);
       expect(res._data).toMatch(/google/); // the resulting html should have the text "google"

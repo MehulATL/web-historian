@@ -9,9 +9,23 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveStaticAssets = function(res, folder, asset) {
-  //Write some code here that helps serve up your static files!
-  //(Static files are things like html (yours or arhived from others...), css, or anything that doesn't change often.)
+exports.serveStaticAssets = function(response, pathname, sendResponseCallback) {
+  console.log('serving static assets', pathname);
+
+  // FIXME: Allow for nested index.html files.
+  if(pathname === '/') {
+    pathname = '/index.html';
+  }
+
+  fs.readFile(__dirname + '/public' + pathname, function(error, data){
+    if (error){
+      console.log(error);
+      sendResponseCallback(response, 'error', 404);
+    } else {
+      // console.log('Done reading file', data += data);
+      sendResponseCallback(response, data.toString());
+    }
+  });
 };
 
 // As you go through, keep thinking about what helper functions you can put here!
