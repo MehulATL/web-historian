@@ -13,7 +13,9 @@ http.get({
   progress: function (current, total) {
     console.log('downloaded %d bytes from %d', current, total);
   }
-}, 'get.bin', function (err, res) {
+// }, 'get.bin', function (err, res) {
+}, '__dirname + '/../data/sites/' + variableThatRepresentsUniqueURL', function (err, res) {
+
   if (err) {
     console.error(err);
     return;
