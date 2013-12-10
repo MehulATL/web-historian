@@ -2,12 +2,12 @@
 // to actually download the urls you want to download.
 var http = require('http-request');
 var fs = require('fs');
+var fetcher = require('./lib/html-fetcher-helpers');
+var filename = __dirname + '/../data/sites.txt';
 
-// load sites.txt
-// grab url from each line
-// remove from file
-// download and save website to unique text file.
+console.log('path', __dirname);
 
+<<<<<<< HEAD
 http.get({
   url: 'http://www.google.com',
   progress: function (current, total) {
@@ -20,6 +20,9 @@ http.get({
     console.error(err);
     return;
   }
+=======
+fetcher.readUrls(filename, fetcher.downloadUrls);
+>>>>>>> 31e43eafa3b449daa8d55da9dca81752ac82a446
 
-  console.log(res.code, res.headers, res.file);
-});
+// CRONJOB
+// * * * * * /opt/boxen/nodenv/versions/v0.10.0/bin/node /Users/hackreactor/code/lovenick/2013-11-web-historian/workers/htmlfetcher.js >/tmp/stdout.log 2>~/Desktop/stderr.log

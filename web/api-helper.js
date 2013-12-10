@@ -1,12 +1,18 @@
 var path = require('path');
 var fs = require('fs');
 
-exports.headers = headers = {
+var headers = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
   "access-control-allow-headers": "content-type, accept",
   "access-control-max-age": 10, // Seconds.
   'Content-Type': "application/json"
+};
+
+var sendResponse = function(response, data, statusCode) {
+  statusCode = statusCode || 200;
+  response.writeHead(statusCode, headers);
+  response.end(JSON.stringify(data));
 };
 
 var checkFileExists = function(data, response, sendResponseCallback){
@@ -19,11 +25,12 @@ var checkFileExists = function(data, response, sendResponseCallback){
     if(!exists) {
       // Invoke storing func
       updateURLList(data.url);
-      sendResponseCallback(response, 'URL saved!', 302);
+      // sendResponseCallback(response, 'URL saved!', 201);
+      sendResponse(response, 'URL saved!', 201);
     }
 
     // redirect user to it, using get request.
-    sendResponseCallback(response, '{ found: true }', 302);
+    sendResponse(response, { found: true }, 200);
   });
 };
 
@@ -44,6 +51,8 @@ var updateURLList = function (url) {
 exports.storeAssets = function(request, response, pathname, sendResponseCallback) {
   postHandler(request, checkFileExists, response, sendResponseCallback);
 };
+
+
 
 
 
