@@ -16,7 +16,14 @@
           dataType: 'json',
           data: JSON.stringify({ url: $('input').val() }),
           success: function(data){
-            console.log('success!!!!', data);
+            if(data.found) {
+              window.location = '/' + $('input').val();
+            } else {
+              $('.notify').html('Site has been added to archive.').fadeIn('slow');
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            console.log('Error!', jqXHR, textStatus, errorThrown);
           }
 
         });
@@ -28,5 +35,6 @@
     <input type="input" name="url"></input>
     <input type="submit" value="submit">
   </form>
+  <div class="notify" style="display:none"></div>
 </body>
 </html>

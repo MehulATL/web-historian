@@ -10,6 +10,10 @@ exports.readUrls = function(filePath, cb){
       console.log('Error loading sites.txt', error);
     } else {
       data = data.toString().split('\n');
+
+      // delete contents of sites.txt
+      fs.writeFile(filePath, '');
+
       cb(data);
     }
   });
