@@ -9,23 +9,40 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
+
+var readFileHelper = function(filename, callBack, response) {
+  fs.readFile(filename, function(error, data){
+    if (error){
+      console.log(error);
+      callBack(response, 'error', 404);
+    } else {
+      // console.log('Done reading file', data += data);
+      callBack(response, data.toString());
+    }
+  });
+};
+
 exports.serveStaticAssets = function(response, pathname, sendResponseCallback) {
   console.log('serving static assets', pathname);
 
   // FIXME: Allow for nested index.html files.
-  if(pathname === '/') {
-    pathname = '/index.html';
+  var filename = '';
+  if(pathname === "/"){
+    filename = '/index.html';
+  } else {
+    filename = pathname;
   }
+  filename = __dirname + '/public' + filename;
 
-  fs.readFile(__dirname + '/public' + pathname, function(error, data){
-    if (error){
-      console.log(error);
-      sendResponseCallback(response, 'error', 404);
-    } else {
-      // console.log('Done reading file', data += data);
-      sendResponseCallback(response, data.toString());
+  console.log('Looking for file', filename);
+
+  fs.exists(filename, function(exists){
+    if(!exists) {
+      filename = __dirname + '/../data/sites' + pathname;
     }
+    readFileHelper(filename, sendResponseCallback, response);
   });
+
 };
 
 // As you go through, keep thinking about what helper functions you can put here!

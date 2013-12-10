@@ -24,7 +24,6 @@ module.exports.handleRequest = function (request, response) {
     sendResponse(response, 'Error, method not allowed', 500);
   }
 
-  // console.log('This static data is', data);
   // sendResponse(response, '');
 };
 
