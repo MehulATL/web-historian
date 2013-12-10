@@ -1,11 +1,12 @@
 var path = require('path');
 var url = require('url');
 var httpHelper = require('./http-helpers');
+var apiHelper = require('./api-helper');
 module.exports.datadir = path.join(__dirname, "../data/sites.txt"); // tests will need to override this.
 
 var actionList = {
-  'GET': httpHelper.serveStaticAssets
-  // 'POST': sendResponse
+  'GET': httpHelper.serveStaticAssets,
+  'POST': apiHelper.storeAssets
 };
 
 var sendResponse = function(response, data, statusCode) {
@@ -19,7 +20,7 @@ module.exports.handleRequest = function (request, response) {
   if(request.method in actionList) {
     var pathname = url.parse(request.url).pathname;
     // var data = httpHelper.serveStaticAssets(response, pathname, sendResponse);
-    var data = actionList[request.method](response, pathname, sendResponse);
+    var data = actionList[request.method](request, response, pathname, sendResponse);
   } else {
     sendResponse(response, 'Error, method not allowed', 500);
   }

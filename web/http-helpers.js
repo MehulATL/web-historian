@@ -22,7 +22,7 @@ var readFileHelper = function(filename, callBack, response) {
   });
 };
 
-exports.serveStaticAssets = function(response, pathname, sendResponseCallback) {
+exports.serveStaticAssets = function(request, response, pathname, sendResponseCallback) {
   console.log('serving static assets', pathname);
 
   // FIXME: Allow for nested index.html files.
