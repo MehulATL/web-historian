@@ -26,20 +26,29 @@ exports.getURLs = function(callBack){
   });
 };
 
-exports.getURL = function(url, callBack){
-  var query = 'SELECT * FROM sites WHERE url = "' + connection.escape(url) + '"';
+exports.getURL = function(url, callBack, response){
+  var query = 'SELECT * FROM sites WHERE url = "' + encodeURI(url) + '"';
   exports.query(query, function(rows, fields){
-    callBack(rows, fields);
+    // console.log(rows);
+    callBack(response, decodeURI(rows[0].html));
+  });
+};
+
+exports.checkURL = function(url, callBack, response){
+  var query = 'SELECT * FROM sites WHERE url = "' + encodeURI(url) + '"';
+  exports.query(query, function(rows, fields){
+    // console.log(rows);
+    callBack(response, rows.length > 0);
   });
 };
 
 exports.addURL = function(newUrl, callBack) {
-  var query = 'INSERT INTO sites (url) VALUES ("' + connection.escape(newUrl) + '")';
+  var query = 'INSERT INTO sites (url) VALUES ("' + encodeURI(newUrl) + '")';
   return exports.query(query, callBack);
 };
 
 exports.saveHTML = function(url, html, callBack) {
-  var query = 'UPDATE sites SET html = "' + connection.escape(html) + '" WHERE url = "' + connection.escape(url) + '"';
+  var query = 'UPDATE sites SET html = "' + encodeURI(html) + '" WHERE url = "' + encodeURI(url) + '"';
   return exports.query(query, callBack);
 };
 

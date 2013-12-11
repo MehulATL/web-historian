@@ -21,8 +21,9 @@ var checkFileExists = function(data, response, sendResponseCallback){
   // console.log('post data is', data);
   data = JSON.parse(data);
 
-  dbHelper.getURL(data.url, function(rows){
-    if(rows.length === 0) {
+  dbHelper.checkURL(data.url, function(test, bool){
+    console.log('The bool is', bool);
+    if(!bool) {
       // updateURLList(data.url);
       dbHelper.addURL(data.url, function(){
         sendResponse(response, 'URL saved!', 201);

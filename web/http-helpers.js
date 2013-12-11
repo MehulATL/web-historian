@@ -1,5 +1,6 @@
 var path = require('path');
 var fs = require('fs');
+var dbHelper = require('./database-helper');
 
 exports.headers = headers = {
   "access-control-allow-origin": "*",
@@ -25,22 +26,24 @@ var readFileHelper = function(filename, callBack, response) {
 exports.serveStaticAssets = function(request, response, pathname, sendResponseCallback) {
   console.log('serving static assets', pathname);
 
-  // FIXME: Allow for nested index.html files.
   var filename = '';
   if(pathname === "/"){
-    filename = '/index.html';
-  } else {
-    filename = pathname;
+    pathname = '/index.html';
   }
-  filename = __dirname + '/public' + filename;
+  filename = __dirname + '/public' + pathname;
 
-  console.log('Looking for file', filename);
 
   fs.exists(filename, function(exists){
-    if(!exists) {
-      filename = __dirname + '/../data/sites' + pathname;
+    if(exists) {
+      // filename = __dirname + '/../data/sites' + pathname;
+      readFileHelper(filename, sendResponseCallback, response);
+    } else {
+      // get the html data
+      console.log('Looking for file', pathname);
+      var url = pathname.substring(1);
+      dbHelper.getURL(url, sendResponseCallback, response);
     }
-    readFileHelper(filename, sendResponseCallback, response);
+
   });
 
 };
