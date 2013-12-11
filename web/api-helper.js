@@ -1,5 +1,6 @@
 var path = require('path');
 var fs = require('fs');
+var dbHelper = require('./database-helper');
 
 var headers = {
   "access-control-allow-origin": "*",
@@ -19,19 +20,31 @@ var checkFileExists = function(data, response, sendResponseCallback){
   // var filename = __dirname + '/../data/sites' + pathname;
   // console.log('post data is', data);
   data = JSON.parse(data);
-  var filename = __dirname + '/../data/sites/' + data.url;
-  console.log('Looking for file', filename);
-  fs.exists(filename, function(exists){
-    if(!exists) {
-      // Invoke storing func
-      updateURLList(data.url);
-      // sendResponseCallback(response, 'URL saved!', 201);
-      sendResponse(response, 'URL saved!', 201);
+
+  dbHelper.getURL(data.url, function(rows){
+    if(rows.length === 0) {
+      // updateURLList(data.url);
+      dbHelper.addURL(data.url, function(){
+        sendResponse(response, 'URL saved!', 201);
+      });
+    } else {
+      sendResponse(response, { found: true }, 200);
     }
 
-    // redirect user to it, using get request.
-    sendResponse(response, { found: true }, 200);
   });
+  // var filename = __dirname + '/../data/sites/' + data.url;
+  // console.log('Looking for file', filename);
+  // fs.exists(filename, function(exists){
+  //   if(!exists) {
+  //     // Invoke storing func
+  //     updateURLList(data.url);
+  //     // sendResponseCallback(response, 'URL saved!', 201);
+  //     sendResponse(response, 'URL saved!', 201);
+  //   }
+
+  //   // redirect user to it, using get request.
+  //   sendResponse(response, { found: true }, 200);
+  // });
 };
 
 var postHandler = function(request, callBack, response, sendResponseCallback){
